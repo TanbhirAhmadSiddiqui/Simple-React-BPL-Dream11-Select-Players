@@ -1,7 +1,21 @@
 import React, { useState } from "react";
 
-const Player = ({ player }) => {
+const Player = ({
+  player,
+  setAvailableBalance,
+  availableBalance,
+  handlePurchasePlayer,
+}) => {
   const [isSelected, setIsSelected] = useState(false);
+  const handleSelected = (player) => {
+    if (availableBalance < player.playerPrice) {
+      alert("Not Enough Coins");
+      return;
+    }
+    setIsSelected(true);
+    setAvailableBalance(availableBalance - player.playerPrice);
+    handlePurchasePlayer(player);
+  };
   return (
     <div className="rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300">
       <img
@@ -40,7 +54,9 @@ const Player = ({ player }) => {
         </div>
         <button
           disabled={isSelected}
-          onClick={() => setIsSelected(true)}
+          onClick={() => {
+            handleSelected(player);
+          }}
           className="btn font-bold text-lg"
         >
           {isSelected ? "Selected" : "Choose Player"}

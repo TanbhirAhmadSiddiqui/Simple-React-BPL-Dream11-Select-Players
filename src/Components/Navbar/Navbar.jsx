@@ -3,7 +3,7 @@ import React from "react";
 import logo from "../../assets/logo.png";
 import dollar from "../../assets/dollar-1.png";
 
-const Navbar = () => {
+const Navbar = ({ availableBalance }) => {
   return (
     <div className="navbar max-w-300 mx-auto">
       <div className="flex-1">
@@ -12,7 +12,7 @@ const Navbar = () => {
         </a>
       </div>
       <div className="flex">
-        <span>6000000000</span>
+        <span>{availableBalance}</span>
         <span className="flex ms-1 items-center">
           Coin <img className="ms-1" src={dollar} alt="Dollar" />
         </span>

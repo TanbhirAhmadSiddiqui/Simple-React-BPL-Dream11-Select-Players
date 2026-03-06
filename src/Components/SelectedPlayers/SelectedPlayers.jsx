@@ -1,9 +1,16 @@
 import React from "react";
+import SelectedPlayerCard from "../SelectedPlayerCard/SelectedPlayerCard";
 
-const SelectedPlayers = () => {
+const SelectedPlayers = ({ purchasePlayer, handleRemovedPurchasePlayer }) => {
   return (
     <div className="max-w-300 mx-auto">
-      <h1>Selected</h1>
+      {purchasePlayer.map((playerCard) => (
+        <SelectedPlayerCard
+          handleRemovedPurchasePlayer={handleRemovedPurchasePlayer}
+          key={playerCard.id}
+          playerCard={playerCard}
+        ></SelectedPlayerCard>
+      ))}
     </div>
   );
 };

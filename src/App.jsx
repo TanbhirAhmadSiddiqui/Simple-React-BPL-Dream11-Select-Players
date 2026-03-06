@@ -9,15 +9,37 @@ const loadPlayers = async () => {
   const res = await fetch("/players.json");
   return res.json();
 };
+const playersPromise = loadPlayers();
 
 function App() {
+  // This state for Available Balance to change on Navbar coin
+  const [availableBalance, setAvailableBalance] = useState(300000);
+  // This is State for purchasePlayer
+  const [purchasePlayer, setPurchasePlayer] = useState([]);
+  // Even handler to handle purchase to Selected player
+  const handlePurchasePlayer = (player) => {
+    const newPurchasePlayer = [...purchasePlayer, player];
+    setPurchasePlayer(newPurchasePlayer);
+  };
+  // Even handler to Delete player to Selected players
+  const handleRemovedPurchasePlayer = (removedPlayer) => {
+    setPurchasePlayer(
+      purchasePlayer.filter((remove) => remove.id !== removedPlayer.id),
+    );
+    console.log(removedPlayer);
+    setAvailableBalance(availableBalance + removedPlayer.playerPrice);
+  };
+  // This state for Available Players and Select Players
   const [toggle, setToggle] = useState(true);
-  const playersPromise = loadPlayers();
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar availableBalance={availableBalance}></Navbar>
       <div className="max-w-300 mx-auto flex justify-between items-center py-5">
-        <h1 className="font-bold text-2xl">Available Players</h1>
+        <h1 className="font-bold text-2xl">
+          {toggle === true
+            ? "Available Players"
+            : `Selected Players(${purchasePlayer.length}/6)`}
+        </h1>
         <div className="font-bold">
           <button
             onClick={() => setToggle(true)}
@@ -29,7 +51,7 @@ function App() {
             onClick={() => setToggle(false)}
             className={`${toggle === false ? "bg-[#4b530b]" : ""} border py-3 px-4 border-gray-400 border-l-0 rounded-r-2xl`}
           >
-            Selected<span>(0)</span>
+            Selected<span>({purchasePlayer.length})</span>
           </button>
         </div>
       </div>
@@ -37,10 +59,18 @@ function App() {
         <Suspense
           fallback={<span className="loading loading-bars loading-xl"></span>}
         >
-          <AvailablePlayers playersPromise={playersPromise}></AvailablePlayers>
+          <AvailablePlayers
+            handlePurchasePlayer={handlePurchasePlayer}
+            availableBalance={availableBalance}
+            setAvailableBalance={setAvailableBalance}
+            playersPromise={playersPromise}
+          ></AvailablePlayers>
         </Suspense>
       ) : (
-        <SelectedPlayers></SelectedPlayers>
+        <SelectedPlayers
+          handleRemovedPurchasePlayer={handleRemovedPurchasePlayer}
+          purchasePlayer={purchasePlayer}
+        ></SelectedPlayers>
       )}
     </>
   );
